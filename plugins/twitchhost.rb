@@ -79,9 +79,14 @@ class TwitchHost
 
         if !exist
           u = Channel.new
-          u[:id] = user["_id"]
-          u[:game] = user["game"]
-          u[:name] = user["name"]
+          u[:id]      = user["_id"]
+          u[:game]    = user["game"]
+          u[:name]    = user["name"]
+          u[:status]  = user["status"]
+          u[:live]    = false
+          u[:host]    = false
+          #u[:viewcount] = #get viewcount var
+          u[:channel] = "#" + user["name"]
           $team_chans.push u
           Channel("#" + $brain.bot).send u.to_s
         end

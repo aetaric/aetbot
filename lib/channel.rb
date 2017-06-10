@@ -1,5 +1,5 @@
 class Channel
-  attr_accessor :name, :id, :game, :status, :live, :viewcount, :host
+  attr_accessor :name, :id, :game, :status, :live, :viewcount, :host, :channel
 
   def go_live
     @live = true
@@ -20,6 +20,7 @@ class Channel
     hash["live"]      = @live
     hash["viewcount"] = @viewcount
     hash["host"]      = @host
+    hash["channel"]   = @channel
     return hash
   end
 
