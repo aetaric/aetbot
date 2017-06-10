@@ -41,7 +41,7 @@ class CustomCommand
   def update_custom(m, command, message)
     if mod? m
       if !command.nil? && !message.nil?
-        @collection.update_one( { :channel => m.channel.name, :command => command }, 
+        @collection.update_one( { :channel => m.channel.name, :command => command },
                            { :channel => m.channel.name, :command => command, :message => message } )
         m.reply "@#{m.user.name}, Updated command: #{command}"
       end

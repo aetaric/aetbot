@@ -16,7 +16,8 @@ class Cinch::Logging
 
   def log_message(type, nick, channel, message, tags)
       time = Time.now
-      @collection.insert_one( { :time => time, :type => type, :nick => nick, :channel => channel, :msg => message, :tags => tags } )
+      @collection.insert_one( { :time => time, :type => type, :nick => nick,
+        :channel => channel, :msg => message, :tags => tags } )
   end
 
   def log_public_message(msg)

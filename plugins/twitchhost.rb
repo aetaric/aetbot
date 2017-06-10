@@ -19,7 +19,7 @@ class TwitchHost
   def refresh_live(m=nil)
     pull_live true
   end
-  
+
   def update_host(m)
     split_msg = m.message.split(" ")
     target = split_msg[0]
@@ -45,7 +45,7 @@ class TwitchHost
         if !$live_chans.include? chan
           m.reply "#{chan.to_s} Now hosting #{target}"
           Channel("#" + chan.to_s).send (".host #{target}")
-        end 
+        end
       end
     end
   end
@@ -56,15 +56,15 @@ class TwitchHost
     request = Net::HTTP::Get.new(uri)
     request["Accept"] = "application/vnd.twitchtv.v5+json"
     request["Client-Id"] = $brain.twitch["client"]
-    
+
     req_options = {
       use_ssl: uri.scheme == "https",
     }
-    
+
     response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
       http.request(request)
     end
-  
+
     output = JSON.load(response.body)
     #puts output
     if !output.nil?
@@ -72,17 +72,18 @@ class TwitchHost
         exist = false
 
         $team_chans.each do |chan|
-          if user["name"] == chan["name"]
+          if user[:name] == chan["name"]
             exist = true
           end
         end
 
         if !exist
-          u = {}
-          u["id"] = user["_id"]
-          u["game"] = user["game"]
-          u["name"] = user["name"]
+          u = Channel.new
+          u[:id] = user["_id"]
+          u[:game] = user["game"]
+          u[:name] = user["name"]
           $team_chans.push u
+          Channel("#" + $brain.bot).send u.to_s
         end
       end
     end
@@ -92,9 +93,9 @@ class TwitchHost
   def pull_live(m=false)
     ids = []
     $team_chans.each do |chan|
-      ids.push chan["id"]
+      ids.push chan[:id]
     end
-    
+
     url = "https://api.twitch.tv/kraken/streams/?channel=" + ids.join(",")
     uri = URI.parse(url)
     request = Net::HTTP::Get.new(uri)
@@ -117,10 +118,10 @@ class TwitchHost
           $live_chans.push user["channel"]["display_name"]
         end
       end
-      Channel("#synthesisbot").send "Live Channels: " + $live_chans.to_s
+      Channel("#" + $brain.bot).send "Live Channels: " + $live_chans.to_s
       if m == false
         force_host
-      end 
+      end
     end
   end
 
@@ -131,7 +132,7 @@ class TwitchHost
       if !$live_chans.include? chan
         Channel(chan).send message
         puts "HOSTING : #{chan} -> #{target}"
-        Channel("#synthesisbot").send("HOSTING : #{chan} -> #{target}")
+        Channel("#" + $brain.bot).send "HOSTING : #{chan} -> #{target}"
       end
     end
   end
