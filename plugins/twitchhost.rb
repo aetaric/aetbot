@@ -85,7 +85,7 @@ class TwitchHost
           u[:status]  = user["status"]
           u[:live]    = false
           u[:host]    = false
-          #u[:viewcount] = #get viewcount var
+          u[:viewcount] = Channel("#" + user["name"]).users.length
           u[:channel] = "#" + user["name"]
           $team_chans.push u
           Channel("#" + $brain.bot).send u.to_s
