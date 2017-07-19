@@ -7,7 +7,7 @@ class Brain
   attr_accessor :users, :channels, :plugins, :bot, :config, :twitch, :mongo
   
   def initialize
-    @redis = Redis.new :db => 1
+    @redis = Redis.new :db => 0
     @bot = JSON.load(@redis.get("bot"))
     @users = JSON.load(@redis.get("users"))
     @plugins = JSON.load(@redis.get("plugins"))

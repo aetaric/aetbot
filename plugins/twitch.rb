@@ -1,4 +1,5 @@
 require 'cinch'
+require 'cinch/cooldown'
 require 'active_support'
 require 'json'
 require 'net/http'
@@ -8,12 +9,10 @@ class Twitch
   include Cinch::Plugin
   include ActiveSupport::Inflector
 
+  enforce_cooldown
+
   match /follow (.+)/, method: :follow
   match /source/, method: :source
-  match /viewers resubscribed while you were away/, method: :processlive
-  match /host (.+)/, method: :host
-
-  timer 120, method: :pull_team
 
   def follow(m, plug)
     if mod?(m) 
@@ -26,44 +25,8 @@ class Twitch
     m.reply ".w #{m.user} You can find my source code here: https://github.com/aetaric/aetbot ."
   end
 
-  def processlive(m)
-    if m.user == "twitchnotify"
-      $live_chans.push m.channel
-    end
+  def barrier(m)
+    m.reply "@#{m.user} Barrier skip involves canceling your knockback by using the wind waker normally given by the barrier. Using item slide and the perfect angle you can phase through the barrier using a specific speed in which a portion of the barrier doesn't check for."
   end
 
-  def host(m, target)
-    if mod?(m)
-      m.reply ".host #{target}"
-    end
-  end
-
-  def pull_team
-    uri = URI.parse("https://api.twitch.tv/kraken/teams/" + $brain.twitch["team"])
-    request = Net::HTTP::Get.new(uri)
-    request["Accept"] = "application/vnd.twitchtv.v5+json"
-    request["Client-Id"] = $brain.twitch["client"]
-
-    req_options = {
-      use_ssl: uri.scheme == "https",
-    }
-
-    response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
-      http.request(request)
-    end
-
-    if response.code == 200
-      output = JSON.load(response.body)
-      @bot.warn output
-      if !output.nil?
-        output["users"].each do |user|
-          u = {}
-          u["id"] = user["_id"]
-          u["game"] = user["game"]
-          u["name"] = user["name"]
-          $team_chans.push u
-        end
-      end
-    end
-  end
 end

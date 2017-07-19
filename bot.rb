@@ -32,6 +32,7 @@ if !$brain.config
 end
 
 $mongo = Mongo::Client.new($brain.mongo["replSet"]["members"], :database => $brain.mongo["db"], replica_set: $brain.mongo["replSet"]["name"])
+Mongo::Logger.logger.level = ::Logger::FATAL
 
 channels = []
 $brain.channels.each do |chan|
@@ -53,20 +54,8 @@ end
     c.password = $brain.bot["password"]
     c.channels = channels
     c.caps = [:"twitch.tv/membership", :"twitch.tv/commands", :"twitch.tv/tags"]
-    c.plugins.options[Cinch::Logging] = {
-      :logfile => "/tmp/public.log", # required
-      :timeformat => "%H:M",
-      :format => "<%{time}> %{nick}: %{msg}",
-      :midnight_message => "=== New day: %Y-%m-%d ==="
-    }
+    c.shared[:cooldown] = { :config => { linkus7: { global: 10, user: 20 } } }
     c.plugins.plugins = plugins
-  end
-
-  on :invite do |m|
-    if permission_check(m, 20)
-      @bot.join(m.channel)
-      $brain.channels.push m.channel
-    end
   end
 
   on :notice do |m|
@@ -82,33 +71,6 @@ end
     @bot.warn "target: " + m.message
   end
   
-  on :join do |m|
-    if m.user == $brain.bot["nick"]
-      match_chan = false
-
-      $brain.channels.each do |chan|
-        if !(chan["name"] == m.channel.to_s)
-          match_chan = true
-        end
-      end
-
-      if !match_chan
-        ch = {}
-        ch["name"] = m.channel.to_s
-        $brain.channels.push ch
-        $brain.save
-      end
-    end
-  end
-
-  on :userstate do |m|
-    if !mod?(m)
-      if !m.channel.to_s.slice(1,m.channel.to_s.length) == $brain.bot["nick"].to_s
-        m.reply "@" + chan_to_user(m) + ", I need Mod and Editor permissions in order to function! Please Mod me and add me to your Editors."
-      end
-    end
-  end
-
 end
 
 $plugin_list = Cinch::PluginList.new @bot
