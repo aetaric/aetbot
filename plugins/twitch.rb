@@ -49,7 +49,7 @@ class Twitch
   def game(m, gamename)
     if mod?(m)
       @collection = $mongo[:users]
-      user = @collection.find_by :name => chan_to_user(m)
+      user = @collection.find name: chan_to_user(m)
 
       uri = URI.parse("https://api.twitch.tv/kraken/channels/" + user["uid"])
       request = Net::HTTP::Put.new(uri)
@@ -78,7 +78,7 @@ class Twitch
   def title(m, title_string)
     if mod?(m)
       @collection = $mongo[:users]
-      user = @collection.find_by :name => chan_to_user(m)
+      user = @collection.find name: chan_to_user(m)
 
       uri = URI.parse("https://api.twitch.tv/kraken/channels/" + user["uid"])
       request = Net::HTTP::Put.new(uri)
