@@ -54,16 +54,13 @@ end
     c.password = $brain.bot["password"]
     c.channels = channels
     c.caps = [:"twitch.tv/membership", :"twitch.tv/commands", :"twitch.tv/tags"]
+<<<<<<< HEAD
+=======
+    c.shared[:cooldown] = { :config => { linkus7: { global: 10, user: 20 } } }
+>>>>>>> 9f0bae82460281362cc4c399d7eb70c923e55bd3
     c.plugins.plugins = plugins
     c.shared[:cooldown] = { :config => { } }
 
-  end
-
-  on :invite do |m|
-    if permission_check(m, 20)
-      @bot.join(m.channel)
-      $brain.channels.push m.channel
-    end
   end
 
   on :notice do |m|
@@ -81,6 +78,7 @@ end
     @bot.warn "viewers: " + split_msg[1]
   end
   
+<<<<<<< HEAD
   on :join do |m|
     if m.user == $brain.bot["nick"]
       match_chan = false
@@ -109,6 +107,8 @@ end
   #  end
   #end
 
+=======
+>>>>>>> 9f0bae82460281362cc4c399d7eb70c923e55bd3
 end
 
 $plugin_list = Cinch::PluginList.new @bot

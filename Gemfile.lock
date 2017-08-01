@@ -21,6 +21,9 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     bson (4.2.1)
+    cinch-cooldown (1.1.7)
+      cinch (~> 2)
+      time-lord (~> 1.0, >= 1.0.1)
     concurrent-ruby (1.0.5)
     eventmachine (1.2.3)
     httparty (0.14.0)
@@ -49,7 +52,11 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   cinch!
+<<<<<<< HEAD
   cinch-cooldown!
+=======
+  cinch-cooldown
+>>>>>>> 9f0bae82460281362cc4c399d7eb70c923e55bd3
   eventmachine
   mongo
   nokogiri
