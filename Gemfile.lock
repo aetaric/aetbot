@@ -52,11 +52,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   cinch!
-<<<<<<< HEAD
-  cinch-cooldown!
-=======
   cinch-cooldown
->>>>>>> 9f0bae82460281362cc4c399d7eb70c923e55bd3
   eventmachine
   mongo
   nokogiri

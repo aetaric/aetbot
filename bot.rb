@@ -54,10 +54,7 @@ end
     c.password = $brain.bot["password"]
     c.channels = channels
     c.caps = [:"twitch.tv/membership", :"twitch.tv/commands", :"twitch.tv/tags"]
-<<<<<<< HEAD
-=======
     c.shared[:cooldown] = { :config => { linkus7: { global: 10, user: 20 } } }
->>>>>>> 9f0bae82460281362cc4c399d7eb70c923e55bd3
     c.plugins.plugins = plugins
     c.shared[:cooldown] = { :config => { } }
 
@@ -77,38 +74,7 @@ end
     @bot.warn "target: " + split_msg[0]
     @bot.warn "viewers: " + split_msg[1]
   end
-  
-<<<<<<< HEAD
-  on :join do |m|
-    if m.user == $brain.bot["nick"]
-      match_chan = false
 
-      $brain.channels.each do |chan|
-        if !(chan["name"] == m.channel.to_s)
-          match_chan = true
-        end
-      end
-
-      if !match_chan
-        ch = {}
-        ch["name"] = m.channel.to_s
-        $brain.channels.push ch
-        $brain.save
-      end
-    end
-  end
-
-  # User state changed slightly and this code might not even be needed anymore. 
-  #on :userstate do |m|
-  #  if !mod?(m)
-  #    if !m.channel.to_s.slice(1,m.channel.to_s.length) == $brain.bot["nick"].to_s
-  #      m.reply "@" + chan_to_user(m) + ", I need Mod and Editor permissions in order to function! Please Mod me and add me to your Editors."
-  #    end
-  #  end
-  #end
-
-=======
->>>>>>> 9f0bae82460281362cc4c399d7eb70c923e55bd3
 end
 
 $plugin_list = Cinch::PluginList.new @bot
