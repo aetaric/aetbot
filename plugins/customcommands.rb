@@ -1,5 +1,4 @@
 require 'cinch'
-require 'cinch/cooldown'
 require 'active_support'
 require 'json'
 require 'net/http'

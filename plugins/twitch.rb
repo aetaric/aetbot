@@ -1,5 +1,4 @@
 require 'cinch'
-require 'cinch/cooldown'
 require 'active_support'
 require 'json'
 require 'net/http'
@@ -9,15 +8,13 @@ class Twitch
   include Cinch::Plugin
   include ActiveSupport::Inflector
 
-  enforce_cooldown
-
   match /follow (.+)/, method: :follow
   match /source/, method: :source
   match /host (.+)/, method: :host
-  match /synthesis/, method: :synthesis
   match /commands/, method: :commands
+  match /day/, method: :day
   match /game (.+)/, method: :game
-  match /title (.+)/, mehtod: :title
+  match /title (.+)/, method: :title
 
   def follow(m, plug)
     if mod?(m)
@@ -36,22 +33,22 @@ class Twitch
     end
   end
 
-  def synthesis(m)
-    m.reply "synthesis is a team: https://www.twitch.tv/team/synthesis  Twitter: https://twitter.com/synthesistwitch"
+  def day(m)
+    m.reply "@#{m.user} It's #{Date.today.strftime("%A")}"
   end
 
   def commands(m)
     if mod?(m)
-      m.reply ".w #{m.user} My Commands are here: https://gist.githubusercontent.com/aetaric/df04e55c159baabafc2194f8516715fc/raw/e77e5db52718db1ca48cea64f3ccdb3c1c59e13f/gistfile1.txt"
+      m.reply ".w #{m.user} My Commands are here: https://gist.githubusercontent.com/aetaric/deda5ab253caf926f4eca632355a6a4f/raw/be73471cc875b5701ebe87e9f35902bb0b33b16a/aetbot%2520Commands"
     end
   end
 
   def game(m, gamename)
     if mod?(m)
       @collection = $mongo[:users]
-      user = @collection.find(name: chan_to_user(m), options: {:limit => 1})
+      user = @collection.find(name: chan_to_user(m)).first
 
-      uri = URI.parse("https://api.twitch.tv/kraken/channels/" + user["uid"])
+      uri = URI.parse("https://api.twitch.tv/kraken/channels/" + user["uid"].to_s)
       request = Net::HTTP::Put.new(uri)
       request.content_type = "application/json"
       request["Client-Id"] = $brain.twitch["client"]
@@ -71,16 +68,16 @@ class Twitch
         http.request(request)
       end
 
-      m.reply "I've set the title to #{gamename}"
+      m.reply "I've set the game to #{gamename}"
     end
   end
 
   def title(m, title_string)
     if mod?(m)
       @collection = $mongo[:users]
-      user = @collection.find(name: chan_to_user(m), options: {:limit => 1})
+      user = @collection.find(name: chan_to_user(m)).first
 
-      uri = URI.parse("https://api.twitch.tv/kraken/channels/" + user["uid"])
+      uri = URI.parse("https://api.twitch.tv/kraken/channels/" + user["uid"].to_s)
       request = Net::HTTP::Put.new(uri)
       request.content_type = "application/json"
       request["Client-Id"] = $brain.twitch["client"]
