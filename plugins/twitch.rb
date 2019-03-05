@@ -1,5 +1,6 @@
 require 'cinch'
 require 'active_support'
+require 'active_view'
 require 'json'
 require 'net/http'
 require 'uri'
@@ -7,6 +8,7 @@ require 'uri'
 class Twitch
   include Cinch::Plugin
   include ActiveSupport::Inflector
+  include ActionView::Helpers::DateHelper
 
   match /follow (.+)/, method: :follow
   match /source/, method: :source
@@ -14,7 +16,8 @@ class Twitch
   match /commands/, method: :commands
   match /day/, method: :day
   match /game (.+)/, method: :game
-  match /title (.+)/, method: :title
+  match /title (.+)/, mehtod: :title
+  match /uptime/, method: :uptime
 
   def follow(m, plug)
     if mod?(m)
@@ -99,5 +102,39 @@ class Twitch
 
       m.reply "I've set the title to #{title_string}"
     end
+  end
+
+  def uptime(m)
+    user_uri = URI.parse("https://api.twitch.tv/kraken/users?login=" + chan_to_user(m))
+    user_request = Net::HTTP::Get.new(uri)
+    user_request["Accept"] = "application/vnd.twitchtv.v5+json"
+    request["Client-Id"] = $brain.twitch["client"]
+    
+    user_req_options = {
+      use_ssl: uri.scheme == "https",
+    }
+    
+    user_response = Net::HTTP.start(user_uri.hostname, user_uri.port, user_req_options) do |http|
+      http.request(request)
+    end
+
+    user_json = JSON.load(response.body)
+
+    uri = URI.parse("https://api.twitch.tv/kraken/streams/" + user_json["users"][0]["_id"])
+    request = Net::HTTP::Get.new(uri)
+    request["Accept"] = "application/vnd.twitchtv.v5+json"
+    request["Client-Id"] = $brain.twitch["client"]
+    
+    req_options = {
+      use_ssl: uri.scheme == "https",
+    }
+    
+    response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+      http.request(request)
+    end
+
+    json = JSON.load(response.body)
+
+    m.reply "#{time_ago_in_words json["stream"]["created_at"]} OpieOP"
   end
 end
