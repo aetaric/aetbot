@@ -2,6 +2,8 @@ Requirements to function correctly:
   Mod: 
     Increased info only provided to mods for logging.
     Access to higher rate limits (not required per se, but it helps).
+  OAuth:
+    Grants access to change game and title.
 
 Custom Commands:
   !addcomm {command} {message} - Adds a custom command for your channel only.
@@ -12,9 +14,13 @@ General Commands:
   !follow {user} - Thows a plug to follow a user (does this 3 times)
   !source - Whispers the user with the link to the source code of the bot (The bot is OpenSource so any viewer/mod/team member is free to submit a Pull Request that fixes something or adds a feature)
   !commands - Whispers the user this list
+  !day - WHAT IS DAY!?
+  !game [new game] - If provided, updates the game directory on Twitch. (Requires OAuth)
+  !title [new status] - If provided, updates the status on Twitch. (Requires OAuth)
+  !uptime - Provides the current stream uptime.
 
 Quote Commands:
-  !quote {quote number} - Pulls a random quote and displays it in chat. If the user is a mod or the broadcaster, pull the numbered quote instead.
+  !quote [quote number] - Pulls a random quote and displays it in chat. If the user is a mod or the broadcaster, pull the numbered quote instead.
   !addquote {text} - Adds a quote to the quote list for your channel
   !editquote {quote number} {new text} - If the command invoker is a mod or the broadcaster update the quote, otherwise errors out.
   !deletequote {quote number} - Deletes the numbered quote if the user is a mod.
