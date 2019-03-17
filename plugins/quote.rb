@@ -35,6 +35,7 @@ class TwitchQuotes
 
   def add_quote(m,quote)
     if mod?(m)
+# Broken atm. Needs updating to allow for timezone logic. For now use UTC.
 #      $channels.each do |channel|
 #        if channel['name'] == chan_to_name(m)
 #          if !channel['locale'].nil?
@@ -54,19 +55,27 @@ class TwitchQuotes
       @collection.insert_one({ :date => local, :channel => m.channel.name, :quote => quote, :number => count, :deleted => 0 })
       m.reply "Successfully added quote ##{count}!"
       m.reply "##{count} | #{quote} @ #{local}"
+    else
+      m.reply "#{m.user.name}, This command is only for mod use."
     end
   end
 
   def edit_quote(m,quote_num,quote)
-    @collection.update_one({ :number => quote_num, :channel => m.channel.name, :deleted => 0 },
-      { :channel => m.channel.name, :number => quote_num, :quote => quote, :deleted => 0 })
-    m.reply "Successfully edited quote ##{quote_num}!"
-    quote =
-    m.reply
+    if mod?(m)
+      @collection.update_one({ :number => quote_num, :channel => m.channel.name, :deleted => 0 },
+        { :channel => m.channel.name, :number => quote_num, :quote => quote, :deleted => 0 })
+      m.reply "Successfully edited quote ##{quote_num}!"
+    else
+      m.reply "#{m.user.name}, This command is only for mod use."
+    end
   end
 
   def del_quote(m,quote_num)
-    @collection.update_one({ :number => quote_num, :channel => m.channel.name }, { :deleted => 1 } )
-    m.reply "Deleted quote ##{quote_num}!"
+    if mod?(m)
+      @collection.update_one({ :number => quote_num, :channel => m.channel.name }, { :deleted => 1 } )
+      m.reply "Deleted quote ##{quote_num}!"
+    else
+      m.reply "#{m.user.name}, This command is only for mod use."
+    end
   end
 end
