@@ -1,7 +1,7 @@
 Requirements to function correctly:
   Mod: 
     Increased info only provided to mods for logging.
-    Access to higher rate limits (not required per se, but it helps)
+    Access to higher rate limits (not required per se, but it helps).
 
 Custom Commands:
   !addcomm {command} {message} - Adds a custom command for your channel only.
@@ -9,6 +9,22 @@ Custom Commands:
   !deletecomm {command} - Deletes command
 
 General Commands:
-  !follow {user} - thows a plug to follow a user (does this 3 times)
+  !follow {user} - Thows a plug to follow a user (does this 3 times)
   !source - Whispers the user with the link to the source code of the bot (The bot is OpenSource so any viewer/mod/team member is free to submit a Pull Request that fixes something or adds a feature)
   !commands - Whispers the user this list
+
+Quote Commands:
+  !quote {quote number} - Pulls a random quote and displays it in chat. If the user is a mod or the broadcaster, pull the numbered quote instead.
+  !addquote {text} - Adds a quote to the quote list for your channel
+  !editquote {quote number} {new text} - If the command invoker is a mod or the broadcaster update the quote, otherwise errors out.
+  !deletequote {quote number} - Deletes the numbered quote if the user is a mod.
+
+Multi-Stream Commands:
+  !multi - Lists the multi-stream URL currently set.
+  !addmulti {usernames seperated by /} - Creates a multi-stream record with the usernames provided.
+  !updatemulti {new usernames} - Updates the multi-stream record.
+  !removemulti - Deletes the multi-stream record
+
+Autotranslation:
+  If you would like to have certain users or languages automatically translated into english, please reach out to aetaric on Twitch.tv.
+
