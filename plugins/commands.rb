@@ -16,6 +16,10 @@ class CommandPlugin
   # Plugin management commands
   match /^!unload (.+)/, use_prefix: false, method: :unload_plugin
   match /^!load (.+)/, use_prefix: false, method: :load_plugin
+  
+  # Bot channel commands
+  match /^!join/, use_prefix: false, method: :join_channel
+  match /^!leave/, use_prefix: false, method: :leave_channel
 
   def load_plugin(m, plugin)
     if permission_check(m, 60)
@@ -98,8 +102,44 @@ class CommandPlugin
     if permission_check(m,65)
       m.reply "Good bye cruel world!"
       $brain.save
-      @bot.exit
+      $bot.exit
+    end
+  end
+  
+  def join_channel(m)
+    if chan_to_user(m) == $bot.nick
+      joinable = true
+      $bot.channels.each do |channel|
+        if channel["name"] == channel["name"]
+          joinable = false
+        end
+      end
+      
+      if joinable
+        $bot.join m.user.name
+        new_channel = {}
+        new_channel["name"] = "#" + m.user.name
+        $bot.channels.push new_channel
+      
+        m.reply "#{m.user.name}, I've joined your channel."
+      else
+        m.reply "#{m.user.name}, I'm already in your channel!"
+      end
     end
   end
 
+  def leave_channel(m)
+    if mod? m
+      m.reply "Right, I'm leaving now"
+      $brain.channels.each_with_index do |channel, index|
+        if m.channel.name == channel["name"]
+          $brain.channels.delete_at index
+          break
+        end
+      end
+      $bot.part m.channel.name, "User requested"
+    else
+      m.reply "#{m.user.name}, Only mods can use this command"
+    end
+  end
 end
