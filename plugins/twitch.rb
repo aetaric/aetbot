@@ -42,7 +42,7 @@ class Twitch
 
   def commands(m)
     if mod?(m)
-      m.reply ".w #{m.user} My Commands are here: https://gist.githubusercontent.com/aetaric/deda5ab253caf926f4eca632355a6a4f/raw/be73471cc875b5701ebe87e9f35902bb0b33b16a/aetbot%2520Commands"
+      m.reply ".w #{m.user} My Commands are here: https://github.com/aetaric/aetbot/raw/master/COMMANDS"
     end
   end
 
