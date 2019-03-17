@@ -11,6 +11,8 @@ Custom Commands:
   !deletecomm {command} - Deletes command
 
 General Commands:
+  !join - If used in https://twitch.tv/aetbot the bot will join YOUR channel
+  !leave - Requests that the bot leave the current channel. Will only work in the channel you wish the bot to leave.
   !follow {user} - Thows a plug to follow a user (does this 3 times)
   !source - Whispers the user with the link to the source code of the bot (The bot is OpenSource so any viewer/mod is free to submit a Pull Request that fixes something or adds a feature)
   !commands - Whispers the user this list
