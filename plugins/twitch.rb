@@ -1,6 +1,6 @@
 require 'cinch'
 require 'active_support'
-require 'active_view'
+require 'action_view'
 require 'json'
 require 'net/http'
 require 'uri'
