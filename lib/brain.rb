@@ -7,7 +7,7 @@ class Brain
   attr_accessor :users, :channels, :plugins, :bot, :config, :twitch, :mongo
   
   def initialize
-    @redis = Redis.new :db => 0
+    @redis = Redis.new :db => 7, :host => '192.168.2.6'
     @bot = JSON.load(@redis.get("bot"))
     @users = JSON.load(@redis.get("users"))
     @plugins = JSON.load(@redis.get("plugins"))
@@ -81,7 +81,7 @@ class Brain
     print "Server Password?[default is none] "
     response = gets.chomp
     if response === ""
-      bot["password"] = gets.chomp
+      bot["password"] = response
     else
       bot["password"] = ""
     end
@@ -113,18 +113,8 @@ class Brain
     sleep 1
 
     puts "Setting plugins to defaults..."
-    plugins = [constantize("CommandPlugin"), constantize("Cinch::Logging"), constantize("Twitch"), constantize("AutoBan"), constantize("TwitchHost"), constantize("TwitchMod"), constantize("CustomCommand")]
+    plugins = [constantize("CommandPlugin"), constantize("Cinch::Logging"), constantize("Twitch")]
     $brain.plugins = plugins
-
-    puts "Configuring Twitch Credentials..."
-    twitch = {}
-    print "Client ID: "
-    twitch["client"] = gets.chomp
-    print "Client Secret: "
-    twitch["secret"] = gets.chomp
-    print "Twitch Team: "
-    twitch["team"] = gets.chomp
-    $brain.twitch = twitch
 
     puts "Configuring MongoDB..."
     mongo = {}

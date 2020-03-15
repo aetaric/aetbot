@@ -2,7 +2,6 @@ class Cinch::Logging
   include Cinch::Plugin
 
   listen_to :connect,    :method => :setup
-  listen_to :disconnect, :method => :cleanup
   listen_to :channel,    :method => :log_public_message
   listen_to :notice,     :method => :log_notice
   listen_to :roomstate,  :method => :log_roomstate

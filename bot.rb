@@ -23,15 +23,11 @@ Dir["./plugins/*.rb"].each {|file| load file}
 
 $brain = Brain.new
 
-$host_chans = []
-$live_chans = []
-$team_chans = []
-
 if !$brain.config
   $brain.setup
 end
 
-$mongo = Mongo::Client.new($brain.mongo["replSet"]["members"], :database => $brain.mongo["db"], replica_set: $brain.mongo["replSet"]["name"])
+$mongo = Mongo::Client.new($brain.mongo["replSet"]["members"], :database => $brain.mongo["db"])
 Mongo::Logger.logger.level = ::Logger::FATAL
 
 channels = []
@@ -51,30 +47,13 @@ end
     c.port = $brain.bot["port"]
     c.ssl.use = $brain.bot["ssl"]
     c.ssl.verify = $brain.bot["ssl_verify"]
-    c.password = $brain.bot["password"]
+    #c.password = $brain.bot["password"]
     c.channels = channels
     c.caps = [:"twitch.tv/membership", :"twitch.tv/commands", :"twitch.tv/tags"]
     c.shared[:cooldown] = { :config => { linkus7: { global: 10, user: 20 } } }
     c.plugins.plugins = plugins
     c.shared[:cooldown] = { :config => { } }
-
   end
-
-  on :notice do |m|
-    # implement now hosting handling here
-    if !(/has gone offline. Exiting host mode./.match(m.message)).nil?
-      @bot.warn "#{chan_to_user(m)} no longer hosting"
-    end
-  end
-
-  on :hosttarget do |m|
-    # implement hosttarget tracking and redirection here
-    split_msg = m.message.split(" ")
-    @bot.warn "channel: " + m.channel.to_s
-    @bot.warn "target: " + split_msg[0]
-    @bot.warn "viewers: " + split_msg[1]
-  end
-
 end
 
 $plugin_list = Cinch::PluginList.new @bot
